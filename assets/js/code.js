@@ -6,6 +6,10 @@ let eliminados = [];
 
 var agregado = 0;
 
+var agregados = 0;
+
+var descartados = 0;
+
 let alertPlaceholder = document.getElementById('alerts');
 
 const btnGuardar = document.getElementById('btnGuardar');
@@ -139,7 +143,9 @@ const guardarDatos = (codigo,descripcion,cantidad,punit) => {
     
             punit: punit,
     
-            importe: (cantidad * punit)
+            importe: (cantidad * punit),
+
+            status: 'agregado'
     
         }
     
@@ -166,6 +172,8 @@ const llenaInputs = (codigo) => {
         document.getElementById('cantidad').value = existe.cantidad;
 
         document.getElementById('punit').value = existe.punit;
+
+        alert(`El producto existe y será actualizado al pulsar el button <span class="material-symbols-outlined">add_circle</span>`,'info');
 
     }
 
@@ -229,6 +237,62 @@ const confirmaBorrarDatos = (codigo) => {
 
 }
 
+const descartarDatos = (codigo) => {
+
+    if(localStorage.getItem('productos'))
+
+        productos = JSON.parse(localStorage.getItem('productos'));
+
+    productos.forEach((producto,index) => {
+
+        if(producto.codigo == codigo) {
+
+            console.log(`Index del producto es ${index}`);
+
+            alert(`El producto <strong>${producto.descripcion}</strong> ha sido descartado`,'warning');
+
+            producto.status = 'descartado';
+
+            //guardarEliminados(producto);
+
+            //productos.splice(index,1);
+
+        }
+
+    });
+
+    localStorage.setItem('productos',JSON.stringify(productos));
+
+    mostrarProductos();
+
+}
+
+const restaurarDatos = (codigo) => {
+
+    if(localStorage.getItem('productos'))
+
+        productos = JSON.parse(localStorage.getItem('productos'));
+
+    productos.forEach((producto,index) => {
+
+        if(producto.codigo == codigo) {
+
+            console.log(`Index del producto es ${index}`);
+
+            alert(`El producto <strong>${producto.descripcion}</strong> ha sido agregado a la lista`,'success');
+
+            producto.status = 'agregado';
+
+        }
+
+    });
+
+    localStorage.setItem('productos',JSON.stringify(productos));
+
+    mostrarProductos();
+
+}
+
 const borrarDatos = (codigo) => {
 
     if(localStorage.getItem('productos'))
@@ -241,9 +305,9 @@ const borrarDatos = (codigo) => {
 
             console.log(`Index del producto es ${index}`);
 
-            alert(`El producto <strong>${producto.descripcion}</strong> ha sido descartado`,'primary');
+            alert(`El producto <strong>${producto.descripcion}</strong> ha sido eliminado`,'primary');
 
-            guardarEliminados(producto);
+            //guardarEliminados(producto);
 
             productos.splice(index,1);
 
@@ -346,41 +410,93 @@ const mostrarProductos = () => {
 
     const tablaProductos = document.getElementById('tablaProductos');
 
+    const tablaEliminados = document.getElementById('tablaEliminados');
+
+    tablaProductos.innerHTML='';
+
+    tablaEliminados.innerHTML='';
+
     if(localStorage.getItem('productos'))
 
         productos = JSON.parse( localStorage.getItem('productos') );
 
-    console.log(`Productos:`);
+    const agregados = productos.filter( (producto) => {
+
+        return producto.status == 'agregado';
+
+    });
+
+    console.log(`productos agregados (${agregados.length})`);
+
+    const descartados = productos.filter( (producto) => {
+
+        return producto.status == 'descartado';
+
+    });
+
+    console.log(`productos descartados (${descartados.length})`);
+
+    console.log(`Productos (${productos.length}):`);
 
     console.log(productos);
 
-    if(productos.length == 0) {
+    if(agregados.length == 0) {
+        
+        console.log(`No hay productos agregados (${agregados.length})`);
 
-        btnLimpiar.disabled = true;
-
-        tablaProductos.innerHTML='';
-
-        tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-12">No se han agregado productos</li></ul>`;
-
-        return false;
+        tablaProductos.innerHTML = `<ul class="list-group list-group-horizontal"><li class="list-group-item col-12">No se han agregado productos</li></ul>`;
 
     }
 
-    btnLimpiar.disabled = false;
+    if(descartados.length == 0) {
 
-    tablaProductos.innerHTML='';
+        console.log(`No hay productos descartados (${descartados.length})`);
 
-    agregado = 1;
+        tablaEliminados.innerHTML = `<ul class="list-group list-group-horizontal"><li class="list-group-item col-12">No se han descartado productos</li></ul>`;
 
-    productos.forEach((producto) => {
+    }
 
-        tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2">${producto.codigo}</li>
-        <li class="list-group-item col-4">${producto.descripcion}</li>
-        <li class="list-group-item col-2">${producto.cantidad}</li>
-        <li class="list-group-item col-1">${producto.punit}</li>
-        <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+    if(productos.length == 0) {
 
-    });
+        console.log(`No hay productos en la lista (${productos.length})`);
+
+        btnLimpiar.disabled = true;
+
+        return false;
+
+    } else {
+
+        console.log(`Comenzando la lista`);
+
+        btnLimpiar.disabled = false;
+
+        productos.forEach((producto) => {
+
+            console.log(`Status del producto: ${producto.status}`);
+
+            if(producto.status=='agregado') {
+
+                tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2">${producto.codigo}</li>
+                <li class="list-group-item col-4">${producto.descripcion}</li>
+                <li class="list-group-item col-2">${producto.cantidad}</li>
+                <li class="list-group-item col-1">${producto.punit}</li>
+                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="descartarDatos(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+
+            } else if(producto.status=='descartado') {
+
+                console.log(`Agregando producto descartado ${producto.descripcion}`);
+
+                tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2">${producto.codigo}</li>
+                <li class="list-group-item col-4">${producto.descripcion}</li>
+                <li class="list-group-item col-2">${producto.cantidad}</li>
+                <li class="list-group-item col-1">${producto.punit}</li>
+                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="${producto.codigo}" onclick="restaurarDatos(${producto.codigo})"><span class="material-symbols-outlined">restore_from_trash</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})"><span class="material-symbols-outlined">delete_forever</span></button></div></li></ul>`;
+
+            }
+
+        });
+
+    }    
 
 }
 
@@ -486,4 +602,4 @@ btnLimpiar.addEventListener('click', () => {
 
 mostrarProductos();
 
-mostrarEliminados();
+//mostrarEliminados();

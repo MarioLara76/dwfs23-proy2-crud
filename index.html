@@ -48,6 +48,21 @@
                 <h4 class="card-title fs-3 fw-bolder text-opacity-75 text-primary text-center">
                     Ejercicios de CRUD
                 </h4>
+                <div class="row">
+                    <div class="justify-content-center">
+                        <div class="input-group mb-3 justify-content-center">
+                            <button class="btn btn-outline-success" type="button"><span class="material-symbols-outlined">add_circle</span> Agregar</button>
+                            <span class="vr"></span>
+                            <button class="btn btn-outline-primary" type="button"><span class="material-symbols-outlined">restart_alt</span> Vaciar Lista</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary"><span class="material-symbols-outlined">edit</span> Editar</button>
+                            <span class="vr"></span>
+                            <button type="button" class="btn btn-sm btn-outline-warning"><span class="material-symbols-outlined">cancel</span> Descartar</button>
+                            <button type="button" class="btn btn-sm btn-outline-success"><span class="material-symbols-outlined">restore_from_trash</span> Restaurar</button>
+                            <span class="vr"></span>
+                            <button type="button" class="btn btn-sm btn-outline-danger"><span class="material-symbols-outlined">delete_forever</span> Eliminar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row bg-example py-3">
@@ -83,17 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="alerts">
-                    <!--div class="alert alert-primary" id="msginfo" role="alert">
-                        alert cuando esté incompleto
-                    </!--div>
-                    <div class="alert alert-success" id="msgsuccess" role="alert">
-                        alert cuando se haya registrado
-                    </div>
-                    <div class="alert alert-danger" id="msgerror" role="alert">
-                        alert cuando algún dato no corresponda al esperado
-                    </div>-->
-                </div>
+                <div class="row" id="alerts"></div>
                 <div class="d-grid py-5 gap-3">
                     <h4 class="text-center">Tabla de productos registrados</h4>
                     <div class="p-2 bg-light border justify-content-center fw-bolder">
@@ -106,14 +111,7 @@
                             <li class="list-group-item col-2 text-center">Procesos</li>
                         </ul>
                     </div>
-                    <div class="p-2 bg-light border justify-content-center" id="tablaProductos">
-                        <!--<ul class="list-group list-group-horizontal">
-                            <li class="list-group-item">An item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                            <li class="list-group-item">A four item</li>
-                        </ul>-->
-                    </div>
+                    <div class="p-2 bg-light border justify-content-center" id="tablaProductos"></div>
                     <h4 class="text-center">Tabla de productos descartados</h4>
                     <div class="p-2 bg-light border" id="tablaEliminados"></div>
                 </div>
