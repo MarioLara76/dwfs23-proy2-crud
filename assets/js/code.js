@@ -10,7 +10,7 @@ const btnGuardar = document.getElementById('btnGuardar'); // Button guardar dato
 
 const btnLimpiar = document.getElementById('btnLimpiar'); // Button limpiar inputs
 
-/* Funcion para revisar que el dato del input es correcto */
+/* Function para revisar que el dato del input es correcto */
 const isNumeric = (valor) => {
 
     if( isNaN(valor) ) // Si el valor no es numérico se retorna false
@@ -21,7 +21,7 @@ const isNumeric = (valor) => {
 
 }
 
-/* Funcion que revisa que los inputs contengan valores*/
+/* Function que revisa que los inputs contengan valores*/
 const checaCarga = (elemento) => {
 
     let agregar = true;
@@ -52,7 +52,7 @@ const checaCarga = (elemento) => {
 
 }
 
-/* Funcion para revisar el tipo de dato que contiene cada input*/
+/* Function para revisar el tipo de dato que contiene cada input*/
 const checaDato = (valor,elemento = null) => {
 
     console.log(`este dato ${valor} es a number? ${isNumeric(valor)}`);
@@ -65,11 +65,11 @@ const checaDato = (valor,elemento = null) => {
 
     }
 
-    return isNumeric(valor); // Si la condición anterior no aplica, se retorna el valor de la funcion
+    return isNumeric(valor); // Si la condición anterior no aplica, se retorna el valor de la Function
 
 }
 
-/* Funcion en desuso, consiste en guardar en otra key de local storage, la lista de productos eliminados */
+/* Function en desuso, consiste en guardar en otra key de local storage, la lista de productos eliminados */
 const guardarEliminados = (eliminado) => {
 
     if(localStorage.getItem('eliminados'))  //Se verifica que exista la clave
@@ -185,7 +185,7 @@ const llenaInputs = (codigo) => {
 
 }
 
-/* Funcion que limpia los inputs para agregar otro producto */
+/* Function que limpia los inputs para agregar otro producto */
 const vaciaInputs = () => {
 
     const inputs = document.querySelectorAll('.input'); // Se obtiene la lista de inputs
@@ -202,18 +202,18 @@ const vaciaInputs = () => {
 
 }
 
-/* Funcion que permite modificar los datos de un producto existente */
+/* Function que permite modificar los datos de un producto existente */
 const editarDatos = (codigo) => {
     
     document.getElementById('codigo').focus(); // Al pulsar el button Editar en la tabla, se envía el cursor al input
 
     document.getElementById('codigo').value = codigo; // Se asigna el código que se recibe desde la función al ejecutarse
 
-    document.getElementById('codigo').onchange(); // Se ejecuta el evenot onchange que al producirse, se ejecuta la funcion checaCarga() que recibe el objeto completo
+    document.getElementById('codigo').onchange(); // Se ejecuta el evenot onchange que al producirse, se ejecuta la Function checaCarga() que recibe el objeto completo
 
 }
 
-/* Funcion que muestra un mensaje que pide confirmar cuando se descarta un producto*/
+/* Function que muestra un mensaje que pide confirmar cuando se descarta un producto*/
 const confirmaDescartarProducto = (codigo) => {
 
     const thisProducto = existeProducto(codigo); //Se busca el producto usando el código como dato de búsqueda
@@ -230,7 +230,7 @@ const confirmaDescartarProducto = (codigo) => {
 
 }
 
-/* Funcion para cambiar status a descartado y mostrar el producto en la tabla para tal fin */
+/* Function para cambiar status a descartado y mostrar el producto en la tabla para tal fin */
 const descartarDatos = (codigo) => {
 
     if(localStorage.getItem('productos')) // Se revisa que la lista exista en Local Storage
@@ -247,7 +247,7 @@ const descartarDatos = (codigo) => {
 
 }
 
-/* Funcion que cambia el status de un producto a agregado, pasándolo a la lista de productos */
+/* Function que cambia el status de un producto a agregado, pasándolo a la lista de productos */
 const restaurarDatos = (codigo) => {
 
     if(localStorage.getItem('productos')) //Se revisa que exista la lista en local storage
@@ -266,7 +266,7 @@ const restaurarDatos = (codigo) => {
 
 }
 
-/* Funcion que muestra un mensaje que pide confirmar el borrado */
+/* Function que muestra un mensaje que pide confirmar el borrado */
 const confirmaBorrarDatos = (codigo) => {
     
     if(!codigo) { //Si se ejecuta la función sin enviar el parámetro, se retorna un mensaje de error
@@ -285,7 +285,7 @@ const confirmaBorrarDatos = (codigo) => {
 
 }
 
-/* Funcion que elimina los datos de un producto */
+/* Function que elimina los datos de un producto */
 const borrarDatos = (codigo) => {
 
     if(localStorage.getItem('productos')) // Se revisa que la lista exista en local storage
@@ -345,7 +345,7 @@ const borrarDatos = (codigo) => {
 }
 */
 
-/* Funcion para crear los divs alerts y mostrarlos según sea requerido */
+/* Function para crear los divs alerts y mostrarlos según sea requerido */
 const alert = (message, type, timer=1) => {
     
     const wrapper = document.createElement('div'); //Se crea un div para mostrar el mensaje
@@ -371,7 +371,7 @@ const alert = (message, type, timer=1) => {
 
 }
 
-/* Funcion que muestra los productos eliminados (descartados) (EN DESUSO) */
+/* Function que muestra los productos eliminados (descartados) (EN DESUSO) */
 const mostrarEliminados = () => {
 
     if(localStorage.getItem('eliminados'))
@@ -402,7 +402,7 @@ const mostrarEliminados = () => {
 
 }
 
-/* Funcion que muestra los productos guardados en local storage según status */
+/* Function que muestra los productos guardados en local storage según status */
 const mostrarProductos = () => {
 
     const btnLimpiar = document.getElementById('btnLimpiar'); //Para controlar si se habilita o no el button
@@ -461,7 +461,7 @@ const mostrarProductos = () => {
 
         btnLimpiar.disabled = true;
 
-        return false; //La funcion retorna false para dejar de ejecutar el código
+        return false; //La Function retorna false para dejar de ejecutar el código
 
     } else {
 
@@ -495,11 +495,46 @@ const mostrarProductos = () => {
 
         });
 
-    }    
+    }
+
+    //Calculando y agregando importes
+    const importeAgregados = agregados.reduce((total, producto) => { //array.reduce() para sumar los importes de agregados
+
+        return total + producto.importe;
+
+    },0);
+
+    console.log(`Total importe agregados: ${importeAgregados}`);
+
+    if(importeAgregados > 0 )
+
+    tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2"></li>
+    <li class="list-group-item col-4"></li>
+    <li class="list-group-item col-2"></li>
+    <li class="list-group-item col-1 justify-content-end">Total</li>
+    <li class="list-group-item col-1">${importeAgregados}</li><li class="list-group-item col-2"></li></ul>`;
+
+    const importeDescartados = descartados.reduce((total, producto) => { //array.reduce() para sumar los importes de descartados
+
+        return total + producto.importe;
+
+    },0);
+
+    console.log(`Total importe agregados: ${importeDescartados}`);
+
+    if(importeDescartados > 0 )
+
+    tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2"></li>
+    <li class="list-group-item col-4"></li>
+    <li class="list-group-item col-2"></li>
+    <li class="list-group-item col-1 justify-content-end">Total</li>
+    <li class="list-group-item col-1">${importeDescartados}</li><li class="list-group-item col-2"></li></ul>`;
 
 }
 
-/*Funcion que revisa si existe un producto basado en su código, retorna el arreglo de datos del producto */
+/* Function que calcula el total del importe*/
+
+/*Function que revisa si existe un producto basado en su código, retorna el arreglo de datos del producto */
 const existeProducto = (codigo) => {
 
     if(localStorage.getItem('productos')) // Se revisa que la lista exista en local storage
@@ -508,7 +543,7 @@ const existeProducto = (codigo) => {
 
     console.log(productos);
 
-    const existe = productos.find((producto) => { //find para buscar el código que recibe la funcion
+    const existe = productos.find((producto) => { //find para buscar el código que recibe la Function
 
         return producto.codigo == codigo; //retorna el arreglo de datos para el código buscado
 
@@ -518,7 +553,7 @@ const existeProducto = (codigo) => {
 
     console.log(`producto ${codigo} existe en ${JSON.stringify(productos)} ? ${JSON.stringify(existe)}`);
 
-    return existe; //La funcion retorna la variable que recibe el resultado de array.find()
+    return existe; //La Function retorna la variable que recibe el resultado de array.find()
 
 }
 
