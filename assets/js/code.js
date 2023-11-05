@@ -19,11 +19,11 @@ const btnLimpiar = document.getElementById('btnLimpiar');
 const isNumeric = (valor) => {
 
     //if(typeof valor === 'number')
-    if( !isNaN(valor) )
+    if( isNaN(valor) )
 
-        return true;
+        return false;
 
-    return false;
+    return true;
 
 }
 
@@ -43,6 +43,10 @@ const checaCarga = (elemento) => {
 
         llenaInputs(elemval);
 
+    if(elemid == 'descripcion')
+
+        agregar = checaDato(elemval,elemid);
+
     if(elemval === '')
 
         agregar = false;
@@ -57,7 +61,19 @@ const checaCarga = (elemento) => {
 
 const checaDato = (valor,elemento = null) => {
 
-    if(elemento === 'descripcion' && isNumeric(valor) !== true)
+    console.log(`este dato ${valor} es a number? ${isNumeric(valor)}`);
+
+    if(isNumeric(valor) === true) {
+
+        if(elemento === 'descripcion')
+
+            return false;
+
+    }
+
+    return isNumeric(valor);
+
+    /*if(elemento === 'descripcion' && isNumeric(valor) !== true) 
 
         return true;
 
@@ -65,7 +81,7 @@ const checaDato = (valor,elemento = null) => {
 
         return true;
 
-    return false;
+    return false;*/
 
 }
 
@@ -157,7 +173,9 @@ const guardarDatos = (codigo,descripcion,cantidad,punit) => {
 
     vaciaInputs();
 
-    alert(`Producto ${descripcion} con código ${codigo} ha sido ${statusProducto}`, alertProducto);
+    //alert(`Producto ${descripcion} con código ${codigo} ha sido ${statusProducto}`, alertProducto);
+    showModal(alertProducto,`Producto ${descripcion} con código ${codigo} ha sido ${statusProducto}`);
+    
 
 }
 
@@ -210,15 +228,6 @@ const editarDatos = (codigo) => {
 
 const confirmaBorrarDatos = (codigo) => {
     
-    /*
-        document.getElementById('codigo').focus();
-
-        document.getElementById('codigo').value = codigo;
-
-        document.getElementById('codigo').onchange();
-
-    */
-    
     if(!codigo) {
 
         alert('No ha seleccionado un producto','danger');
@@ -231,9 +240,35 @@ const confirmaBorrarDatos = (codigo) => {
 
     if(thisProducto) {
 
-        alert(`<div class="row"><div class="col-6"><p class="text-primary">El producto selecionado es<br>Código: ${thisProducto.codigo}<br>Descripción: ${thisProducto.descripcion}<br>Cantidad: ${thisProducto.cantidad}<br>Precio Unitario: ${thisProducto.punit}</p></div><div class="col-6"><p class="text-danger">¿Está seguro que desea eliminar el producto?</p><p><button class="btn btn-md btn-danger" value="${codigo}" onClick="borrarDatos(${codigo})" data-bs-dismiss="alert">Sí</button><span class="vr"></span><button class="btn btn-md btn-dark" data-bs-dismiss="alert">No</button></p></div></div>`,"warning", 0);
+        //alert(`<div class="row"><div class="col-6"><p class="text-primary">El producto selecionado es<br>Código: ${thisProducto.codigo}<br>Descripción: ${thisProducto.descripcion}<br>Cantidad: ${thisProducto.cantidad}<br>Precio Unitario: ${thisProducto.punit}</p></div><div class="col-6"><p class="text-danger">¿Está seguro que desea eliminar el producto?</p><p><button class="btn btn-md btn-danger" value="${codigo}" onClick="borrarDatos(${codigo})" data-bs-dismiss="alert">Sí</button><span class="vr"></span><button class="btn btn-md btn-dark" data-bs-dismiss="alert">No</button></p></div></div>`,"warning", 0);
+
+        showModal('danger',`<div class="row"><div class="col-6"><p class="text-primary">El producto selecionado es<br>Código: ${thisProducto.codigo}<br>Descripción: ${thisProducto.descripcion}<br>Cantidad: ${thisProducto.cantidad}<br>Precio Unitario: ${thisProducto.punit}</p></div><div class="col-6"><p class="text-danger">¿Está seguro que desea eliminar el producto?</p><p><button class="btn btn-md btn-danger" value="${codigo}" onClick="borrarDatos(${codigo})" data-bs-dismiss="offcanvas">Sí</button><span class="vr"></span><button class="btn btn-md btn-dark" data-bs-dismiss="offcanvas">No</button></p></div></div>`,0);
 
     }
+
+}
+
+const confirmaDescartarProducto = (codigo) => {
+
+    if(localStorage.getItem('productos'))
+
+        productos = JSON.parse(localStorage.getItem('productos'));
+
+    const thisProducto = productos.find((producto) => {
+
+        return producto.codigo == codigo;
+
+    });
+
+    console.log(`El producto recuperado es ${JSON.stringify(thisProducto)}`);
+
+    if(thisProducto !== null)
+
+        showModal('warning',`<div class="row"><div class="col-6"><p class="text-primary">El producto selecionado es<br>Código: ${thisProducto.codigo}<br>Descripción: ${thisProducto.descripcion}<br>Cantidad: ${thisProducto.cantidad}<br>Precio Unitario: ${thisProducto.punit}</p></div><div class="col-6"><p class="text-danger">¿Está seguro que desea descartar el producto?</p><p><button class="btn btn-md btn-danger" value="${codigo}" onClick="descartarDatos(${codigo})" data-bs-dismiss="offcanvas">Sí</button><span class="vr"></span><button class="btn btn-md btn-dark" data-bs-dismiss="offcanvas">No</button></p></div></div>`,0);
+
+    else
+
+        showModal('danger','El producto no existe');
 
 }
 
@@ -249,13 +284,10 @@ const descartarDatos = (codigo) => {
 
             console.log(`Index del producto es ${index}`);
 
-            alert(`El producto <strong>${producto.descripcion}</strong> ha sido descartado`,'warning');
+            //alert(`El producto <strong>${producto.descripcion}</strong> ha sido descartado`,'warning');
+            showModal('warning',`El producto <strong>${producto.descripcion}</strong> ha sido descartado`);
 
             producto.status = 'descartado';
-
-            //guardarEliminados(producto);
-
-            //productos.splice(index,1);
 
         }
 
@@ -353,6 +385,7 @@ const borrarDatos = (codigo) => {
 const alert = (message, type, timer=1) => {
     
     const wrapper = document.createElement('div')
+
     wrapper.innerHTML = [
         `<div class="alert alert-${type} alert-dismissible" role="alert">`,
         `   <div>${message}</div>`,
@@ -480,7 +513,7 @@ const mostrarProductos = () => {
                 <li class="list-group-item col-4">${producto.descripcion}</li>
                 <li class="list-group-item col-2">${producto.cantidad}</li>
                 <li class="list-group-item col-1">${producto.punit}</li>
-                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="descartarDatos(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="confirmaDescartarProducto(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
 
             } else if(producto.status=='descartado') {
 
@@ -562,7 +595,8 @@ btnGuardar.addEventListener('click', () => {
 
     if(guardar === false) {
 
-        alert('Error en los datos ingresados, revise la información', 'danger');
+        //alert('Error en los datos ingresados, revise la información', 'danger');
+        showModal('danger','Error en los datos ingresados, revise la información');
 
         return false;
 
@@ -574,31 +608,86 @@ btnGuardar.addEventListener('click', () => {
 
 });
 
-btnLimpiar.addEventListener('click', () => {
-
-    console.log(`Eliminando la data de Local Storage`);
+const limpiarDatos = () => {
 
     localStorage.removeItem('productos');
 
     productos = [];
 
-    localStorage.removeItem('eliminados');
-
-    eliminados = [];
-
-    alert('<p class="fw-bolder text-primary">Toda la información ha sido eliminada</p>','success');
+    showModal('success','<p class="fw-bolder text-primary">Toda la información ha sido eliminada</p>');
 
     setTimeout(function() {
 
-        console.log(`Iniciando mostrar productos y eliminados`);
-
-        mostrarEliminados();
+        console.log(`Iniciando mostrar Productos`);
 
         mostrarProductos();
 
     },500);
 
+}
+
+btnLimpiar.addEventListener('click', () => {
+
+    showModal('danger',`<div class="row"><div class="justify-content-center"><p class="text-danger">¿Está seguro que desea eliminar toda la lista?</p><p><button class="btn btn-md btn-danger" onClick="limpiarDatos()" data-bs-dismiss="offcanvas">Sí</button><span class="vr"></span><button class="btn btn-md btn-dark" data-bs-dismiss="offcanvas">No</button></p></div></div>`,0);
+
 });
+
+const messageModal = new bootstrap.Offcanvas('#messageModal');
+
+const mymessageModal = document.getElementById('messageModal')
+
+mymessageModal.addEventListener('hidden.bs.offcanvas', event => {
+    console.log("Ocultando el modal");
+});
+
+mymessageModal.addEventListener('shown.bs.offcanvas', event => {
+    console.log("Mostrando el modal");
+});
+
+const showModal = (type,message,timer=1) => {
+
+    const thisMessage = document.getElementById('message');
+
+    let txtAction = '';
+    
+    if(txtAction !== '')
+    
+        txtAction = '<p class="fw-bolder h3">' + action + '</p>';
+
+    let buttons = '';
+
+    if(type === 'confirm') {
+
+        type='warning';
+
+        buttons = '<div class="d-grid gap-2 d-md-flex justify-content-md-end">'
+        + '<button type="button" id="btnYes" name="btnYes" data-action="' + action + '" data-id="' + codigo + '" data-bs-dismiss="offcanvas" class="btn btn-outline-dark btnyes">Sí</button>'
+        + '<button type="button" id="btnNo" name="btnNo" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary">No</button>'
+        + '</div>';
+
+    }
+
+    thisMessage.innerHTML = txtAction
+    + '<div class="row" id="msgInfo">'
+    + '<div class="justify-content-center">'
+    + '    <div class="alert alert-' + type + '">' + message + '</div>'
+    + '</div>'
+    + ( (buttons!=='') ? buttons : '')
+    + '</div>';
+
+    messageModal.show();
+
+    if( timer > 0 ) {
+
+        setTimeout(function() {
+
+            messageModal.hide();
+
+        }, 2000)
+
+    }
+
+}
 
 mostrarProductos();
 
