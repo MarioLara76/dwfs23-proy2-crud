@@ -469,27 +469,35 @@ const mostrarProductos = () => {
 
         btnLimpiar.disabled = false; //Al haber productos se puede limpiar la tabla, disabled es false
 
+        let agregados = 1;
+
+        let eliminados = 1;
+
         productos.forEach((producto) => { //Se recorre la lista de productos
 
             console.log(`Status del producto: ${producto.status}`);
 
             if(producto.status=='agregado') { //Solo productos con status agregado
 
-                tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2">${producto.codigo}</li>
+                tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1 text-center">${producto.codigo}</li>
                 <li class="list-group-item col-4">${producto.descripcion}</li>
-                <li class="list-group-item col-2">${producto.cantidad}</li>
-                <li class="list-group-item col-1">${producto.punit}</li>
-                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="confirmaDescartarProducto(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+                <li class="list-group-item col-1 text-center">${producto.cantidad}</li>
+                <li class="list-group-item col-2 text-end">${ ( (agregados==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
+                <li class="list-group-item col-2 text-end">${ ( (agregados==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="confirmaDescartarProducto(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+
+                agregados++;
 
             } else if(producto.status=='descartado') { //Solo productos con status descartado
 
                 console.log(`Agregando producto descartado ${producto.descripcion}`);
 
-                tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2">${producto.codigo}</li>
+                tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1 text-center">${producto.codigo}</li>
                 <li class="list-group-item col-4">${producto.descripcion}</li>
-                <li class="list-group-item col-2">${producto.cantidad}</li>
-                <li class="list-group-item col-1">${producto.punit}</li>
-                <li class="list-group-item col-1">${producto.importe}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="${producto.codigo}" onclick="restaurarDatos(${producto.codigo})"><span class="material-symbols-outlined">restore_from_trash</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})"><span class="material-symbols-outlined">delete_forever</span></button></div></li></ul>`;
+                <li class="list-group-item col-1 text-center">${producto.cantidad}</li>
+                <li class="list-group-item col-2 text-end">${( (eliminados==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
+                <li class="list-group-item col-2 text-end">${( (eliminados==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="${producto.codigo}" onclick="restaurarDatos(${producto.codigo})"><span class="material-symbols-outlined">restore_from_trash</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})"><span class="material-symbols-outlined">delete_forever</span></button></div></li></ul>`;
+
+                eliminados++;
 
             }
 
@@ -508,11 +516,11 @@ const mostrarProductos = () => {
 
     if(importeAgregados > 0 )
 
-    tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2"></li>
+    tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1"></li>
     <li class="list-group-item col-4"></li>
-    <li class="list-group-item col-2"></li>
-    <li class="list-group-item col-1 justify-content-end">Total</li>
-    <li class="list-group-item col-1">${importeAgregados}</li><li class="list-group-item col-2"></li></ul>`;
+    <li class="list-group-item col-1"></li>
+    <li class="list-group-item col-2 text-end">Total</li>
+    <li class="list-group-item col-2 text-end">${formatoMoneda(importeAgregados)}</li><li class="list-group-item col-2"></li></ul>`;
 
     const importeDescartados = descartados.reduce((total, producto) => { //array.reduce() para sumar los importes de descartados
 
@@ -524,11 +532,11 @@ const mostrarProductos = () => {
 
     if(importeDescartados > 0 )
 
-    tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-2"></li>
+    tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1"></li>
     <li class="list-group-item col-4"></li>
-    <li class="list-group-item col-2"></li>
-    <li class="list-group-item col-1 justify-content-end">Total</li>
-    <li class="list-group-item col-1">${importeDescartados}</li><li class="list-group-item col-2"></li></ul>`;
+    <li class="list-group-item col-1"></li>
+    <li class="list-group-item col-2 text-end">Total</li>
+    <li class="list-group-item col-2 text-end">${formatoMoneda(importeDescartados)}</li><li class="list-group-item col-2"></li></ul>`;
 
 }
 
@@ -655,8 +663,7 @@ const showModal = (type,message,timer=1) => {
     const thisMessage = document.getElementById('message'); //elemento que recibirá el mensaje
 
     //Contenido a mostrar
-    thisMessage.innerHTML = 
-    + '<div class="row" id="msgInfo">'
+    thisMessage.innerHTML = '<div class="row" id="msgInfo">'
     + ' <div class="justify-content-center">'
     + '    <div class="alert alert-' + type + '">' + message + '</div>'
     + ' </div>'
@@ -673,6 +680,25 @@ const showModal = (type,message,timer=1) => {
         }, 2000)
 
     }
+
+}
+
+const formatoMoneda = (cantidad) => {
+    
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+    }).format(cantidad);
+
+}
+
+//let formatoNumero = new Intl.NumberFormat('es-MX').format(number);
+let formatoNumero = (number) => {
+    
+    return new Intl.NumberFormat('es-MX', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+    }).format(number);
 
 }
 
