@@ -43,7 +43,6 @@
     </main>
     <div class="b-example-divider"></div>
     <section class="container">
-        <a href="tests.html" target="_blank">Ver prueba</a>
         <div class="card shadow-lg border-0 rounded-lg mt-3">
             <div class="card-header">
                 <h4 class="card-title fs-3 fw-bolder text-opacity-75 text-primary text-center">
@@ -102,7 +101,20 @@
                 </div>
                 <div class="row" id="alerts"></div>
                 <div class="d-grid py-3 gap-3 table-responsive">
+                    <h4 class="text-center">Tabla de productos registrados</h4>
+                    <div class="p-2 bg-light border justify-content-center fw-bolder">
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item col-1 text-center">Código</li>
+                            <li class="list-group-item col-4">Descripción</li>
+                            <li class="list-group-item col-1">Cantidad</li>
+                            <li class="list-group-item col-2 text-end">Precio</li>
+                            <li class="list-group-item col-2 text-end">Importe</li>
+                            <li class="list-group-item col-2 text-center">Procesos</li>
+                        </ul>
+                    </div>
                     <div class="p-2 bg-light border justify-content-center" id="tablaProductos"></div>
+                    <h4 class="text-center">Tabla de productos descartados</h4>
+                    <div class="p-2 bg-light border" id="tablaEliminados"></div>
                 </div>
             </div>
         </div>
@@ -113,9 +125,10 @@
             <div class="row">
                 <div class="col col-6 fw-lighter">
                     Mario Lara Pérez
-                    <br>Desarrollador Web LAMP
+                    Desarrollador Web LAMP
                     <address>
-                        marioolara78@gmail.com | 52 932 128 9094
+                        marioolara78@gmail.com<br>
+                        +52 932 128 9094<br>
                     </address>
                 </div>
                 <div class="col col-6 fw-bolder justify-content-end">

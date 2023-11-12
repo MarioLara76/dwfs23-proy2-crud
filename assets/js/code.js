@@ -409,11 +409,11 @@ const mostrarProductos = () => {
 
     const tablaProductos = document.getElementById('tablaProductos'); //Tabla de productos agregados
 
-    const tablaEliminados = document.getElementById('tablaEliminados'); //Tabla de productos eliminados
+    //const tablaEliminados = document.getElementById('tablaEliminados'); //Tabla de productos eliminados
+
+    let tablaEliminados= '';
 
     tablaProductos.innerHTML=''; // Se limpia la tabla productos
-
-    tablaEliminados.innerHTML=''; // Se limpia la tabla descartados
 
     if(localStorage.getItem('productos')) // Se revisa que exista la lista en local storage
 
@@ -451,7 +451,7 @@ const mostrarProductos = () => {
 
         console.log(`No hay productos descartados (${descartados.length})`);
 
-        tablaEliminados.innerHTML = `<ul class="list-group list-group-horizontal"><li class="list-group-item col-12">No se han descartado productos</li></ul>`;
+        tablaEliminados = `<ul class="list-group list-group-horizontal"><li class="list-group-item col-12">No se han descartado productos</li></ul>`;
 
     }
 
@@ -461,17 +461,37 @@ const mostrarProductos = () => {
 
         btnLimpiar.disabled = true;
 
+        tablaProductos.innerHTML += tablaEliminados;
+
         return false; //La Function retorna false para dejar de ejecutar el código
 
     } else {
+
+        productos = ordenaLista(productos);
 
         console.log(`Comenzando la lista`);
 
         btnLimpiar.disabled = false; //Al haber productos se puede limpiar la tabla, disabled es false
 
-        let agregados = 1;
+        let agrega = 1;
 
-        let eliminados = 1;
+        let elimina = 1;
+
+        tablaProductos.innerHTML = `
+        <h4 class="text-center">Lista de Productos</h4>
+        <div class="bg-info justify-content-center fw-bolder">            
+            <ul class="list-group list-group-flush list-group-horizontal">
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-1 col-sm-2 text-center text-white">Código</li>
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-4 col-sm-4 text-white">Descripción</li>
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-1 col-sm-2 text-white">Cantidad</li>
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-2 col-sm-2 text-white text-end">Precio</li>
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-2 col-sm-2 text-white text-end">Importe</li>
+                <li class="bg-dark bg-opacity-25 list-group-item flex-fill col-md-2 col-sm-2 text-white text-center">Acción</li>
+            </ul>
+        </div>
+        <h4 class="text-center">Tabla de productos registrados</h4>`;
+
+        tablaEliminados = `<h4 class="text-center">Tabla de productos descartados</h4>`;
 
         productos.forEach((producto) => { //Se recorre la lista de productos
 
@@ -479,68 +499,102 @@ const mostrarProductos = () => {
 
             if(producto.status=='agregado') { //Solo productos con status agregado
 
-                tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1 text-center">${producto.codigo}</li>
-                <li class="list-group-item col-4">${producto.descripcion}</li>
-                <li class="list-group-item col-1 text-center">${producto.cantidad}</li>
-                <li class="list-group-item col-2 text-end">${ ( (agregados==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
-                <li class="list-group-item col-2 text-end">${ ( (agregados==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})"><span class="material-symbols-outlined">edit</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="confirmaDescartarProducto(${producto.codigo})"><span class="material-symbols-outlined">cancel</span></button></div></li></ul>`;
+                tablaProductos.innerHTML += `
+                    <ul class="list-group list-group-flush list-group-horizontal">
+                        <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">${producto.codigo}</li>
+                        <li class="list-group-item flex-fill col-md-4 col-sm-4 text-wrap">${producto.descripcion}</li>
+                        <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">${producto.cantidad}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">${ ( (agrega==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">${ ( (agrega==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2 ">
+                            <div class="input-group justify-content-center">
+                                <button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="${producto.codigo}" onclick="editarDatos(${producto.codigo})">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <span class="vr"></span>
+                                <button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="${producto.codigo}" onclick="confirmaDescartarProducto(${producto.codigo})">
+                                    <span class="material-symbols-outlined">cancel</span>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>`;
 
-                agregados++;
+                agrega++;
 
             } else if(producto.status=='descartado') { //Solo productos con status descartado
 
                 console.log(`Agregando producto descartado ${producto.descripcion}`);
 
-                tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1 text-center">${producto.codigo}</li>
-                <li class="list-group-item col-4">${producto.descripcion}</li>
-                <li class="list-group-item col-1 text-center">${producto.cantidad}</li>
-                <li class="list-group-item col-2 text-end">${( (eliminados==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
-                <li class="list-group-item col-2 text-end">${( (eliminados==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li><li class="list-group-item col-2"><div class="input-group justify-content-center"><button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="${producto.codigo}" onclick="restaurarDatos(${producto.codigo})"><span class="material-symbols-outlined">restore_from_trash</span></button><span class="vr"></span><button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})"><span class="material-symbols-outlined">delete_forever</span></button></div></li></ul>`;
+                tablaEliminados += `
+                    <ul class="list-group list-group-flush list-group-horizontal">
+                        <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">${producto.codigo}</li>
+                        <li class="list-group-item flex-fill col-md-4 col-sm-2 text-wrap">${producto.descripcion}</li>
+                        <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">${producto.cantidad}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">${( (elimina==1) ? formatoMoneda(producto.punit) : formatoNumero(producto.punit) )}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">${( (elimina==1) ? formatoMoneda(producto.importe) : formatoNumero(producto.importe) )}</li>
+                        <li class="list-group-item flex-fill col-md-2 col-sm-2">
+                            <div class="input-group justify-content-center">
+                                <button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="${producto.codigo}" onclick="restaurarDatos(${producto.codigo})">
+                                    <span class="material-symbols-outlined">restore_from_trash</span>
+                                </button>
+                                <span class="vr"></span>
+                                <button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="${producto.codigo}" onclick="confirmaBorrarDatos(${producto.codigo})">
+                                    <span class="material-symbols-outlined">delete_forever</span>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>`;
 
-                eliminados++;
+                elimina++;
 
             }
 
         });
 
+        //Calculando y agregando importes
+        const importeAgregados = agregados.reduce((total, producto) => { //array.reduce() para sumar los importes de agregados
+
+            return total + producto.importe;
+
+        },0);
+
+        console.log(`Total importe agregados: ${importeAgregados}`);
+
+        if(importeAgregados > 0 )
+
+            tablaProductos.innerHTML += `
+                <ul class="list-group list-group-flush list-group-horizontal">
+                    <li class="list-group-item flex-fill col-md-6 col-sm-6">
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end fst-italic fw-bolder">Total</li>
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end fst-italic fw-bolder">${formatoMoneda(importeAgregados)}</li>
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2"></li>
+                </ul>`;
+
+        const importeDescartados = descartados.reduce((total, producto) => { //array.reduce() para sumar los importes de descartados
+
+            return total + producto.importe;
+
+        },0);
+
+        console.log(`Total importe agregados: ${importeDescartados}`);
+
+        if(importeDescartados > 0 )
+
+            tablaEliminados += `
+                <ul class="list-group list-group-flush list-group-horizontal">
+                    <li class="list-group-item flex-fill col-md-6 col-sm-6">
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end fst-italic fw-bolder">Total</li>
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end fst-italic fw-bolder">${formatoMoneda(importeDescartados)}</li>
+                    <li class="list-group-item flex-fill col-md-2 col-sm-2"></li>
+                </ul>`;
+
+        tablaProductos.innerHTML += tablaEliminados;
+        
+        //tablaProductos.innerHTML += `</div>`;
+
     }
 
-    //Calculando y agregando importes
-    const importeAgregados = agregados.reduce((total, producto) => { //array.reduce() para sumar los importes de agregados
-
-        return total + producto.importe;
-
-    },0);
-
-    console.log(`Total importe agregados: ${importeAgregados}`);
-
-    if(importeAgregados > 0 )
-
-    tablaProductos.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1"></li>
-    <li class="list-group-item col-4"></li>
-    <li class="list-group-item col-1"></li>
-    <li class="list-group-item col-2 text-end">Total</li>
-    <li class="list-group-item col-2 text-end">${formatoMoneda(importeAgregados)}</li><li class="list-group-item col-2"></li></ul>`;
-
-    const importeDescartados = descartados.reduce((total, producto) => { //array.reduce() para sumar los importes de descartados
-
-        return total + producto.importe;
-
-    },0);
-
-    console.log(`Total importe agregados: ${importeDescartados}`);
-
-    if(importeDescartados > 0 )
-
-    tablaEliminados.innerHTML += `<ul class="list-group list-group-horizontal"><li class="list-group-item col-1"></li>
-    <li class="list-group-item col-4"></li>
-    <li class="list-group-item col-1"></li>
-    <li class="list-group-item col-2 text-end">Total</li>
-    <li class="list-group-item col-2 text-end">${formatoMoneda(importeDescartados)}</li><li class="list-group-item col-2"></li></ul>`;
-
 }
-
-/* Function que calcula el total del importe*/
 
 /*Function que revisa si existe un producto basado en su código, retorna el arreglo de datos del producto */
 const existeProducto = (codigo) => {
@@ -683,8 +737,9 @@ const showModal = (type,message,timer=1) => {
 
 }
 
+/* Function que formatea el valor enviado como moneda */
 const formatoMoneda = (cantidad) => {
-    
+
     return new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -692,13 +747,31 @@ const formatoMoneda = (cantidad) => {
 
 }
 
-//let formatoNumero = new Intl.NumberFormat('es-MX').format(number);
-let formatoNumero = (number) => {
+/* Function que formatea el valor enviado como número con decimales */
+const formatoNumero = (number) => {
     
     return new Intl.NumberFormat('es-MX', {
         style: 'decimal',
         minimumFractionDigits: 2,
     }).format(number);
+
+}
+
+/* Function que ordena el arreglo de objetos */
+const ordenaLista = (productos) => {
+
+    const thisProductos = productos;  //Se duplica la lista para hacer la comparación
+
+    console.log(`Productos antes de ordenar`)
+    console.log(productos);
+
+    //return productos.sort((productos, thisProductos) => productos.codigo - thisProductos.codigo); // se efectúa el ordenado por comparación
+    productos.sort((productos, thisProductos) => productos.codigo - thisProductos.codigo); // se efectúa el ordenado por comparación
+
+    console.log(`Productos después de ordenar`)
+    console.log(productos);
+
+    return productos;
 
 }
 

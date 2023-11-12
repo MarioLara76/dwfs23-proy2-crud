@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Applicación CRUD</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    </head>
+    <body>
+        <section class="container">
+            <div class="card shadow-lg border-0 rounded-lg mt-3">
+                <div class="card-header">
+                    <h4 class="card-title fs-3 fw-bolder text-opacity-75 text-primary text-center">
+                        Ejercicios de CRUD
+                    </h4>
+                    <div class="row">
+                        <div class="justify-content-center">
+                            <div class="input-group mb-2 justify-content-center">
+                                <button class="btn btn-outline-success" type="button"><span class="material-symbols-outlined">add_circle</span> Agregar</button>
+                                <span class="vr"></span>
+                                <button type="button" class="btn btn-sm btn-outline-primary"><span class="material-symbols-outlined">edit</span> Editar</button>
+                                <span class="vr"></span>
+                                <button type="button" class="btn btn-sm btn-outline-warning"><span class="material-symbols-outlined">cancel</span> Descartar</button>
+                                <button type="button" class="btn btn-sm btn-outline-success"><span class="material-symbols-outlined">restore_from_trash</span> Restaurar</button>
+                                <span class="vr"></span>
+                                <button type="button" class="btn btn-sm btn-outline-danger"><span class="material-symbols-outlined">delete_forever</span> Eliminar</button>
+                                <span class="vr"></span>
+                                <button class="btn btn-outline-dark" type="button"><span class="material-symbols-outlined">restart_alt</span> Vaciar Lista</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row bg-example py-1">
+                        <div class="col-md-2 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">#</span>
+                                <input class="form-control input" type="tel" id="codigo" name="codigo" onchange="checaCarga(this)" value="" placeholder="Código">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">A</span>
+                                <input class="form-control input" type="text" id="descripcion" name="descripcion" onchange="checaCarga(this)" value="" placeholder="Descripción">
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">#</span>
+                                <input class="form-control input" type="tel" id="cantidad" name="cantidad" onchange="checaCarga(this)" value="" placeholder="Cantidad">
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">$</span>
+                                <input class="form-control input" type="text" id="punit" name="punit" onchange="checaCarga(this)" value="" placeholder="Precio Unitario">
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="input-group mb-3">
+                                <button class="btn btn-outline-success" disabled="" type="button" id="btnGuardar" name="btnGuardar"><span class="material-symbols-outlined">add_circle</span></button>
+                                <span class="vr"></span>
+                                <button class="btn btn-outline-dark" type="button" id="btnLimpiar" name="btnLimpiar"><span class="material-symbols-outlined">restart_alt</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="alerts"></div>
+                    <div class="d-grid py-3 gap-3 table-responsive">
+                        <div class="p-2 bg-light border justify-content-center" id="tablaProductos">
+                            <h4 class="text-center">Lista de Productos</h4>
+                            <div class="justify-content-center d-block">
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-center text-white">Código</li>
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-white">Descripción</li>
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-white">Cantidad</li>
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-white text-end">Precio</li>
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-white text-end">Importe</li>
+                                    <li class="bg-dark bg-opacity-25 list-group-item flex-fill text-white text-center">Acción</li>
+                                </ul>
+                                <h4 class="text-center">Tabla de productos registrados</h4>
+                                <ul class="list-group list-group-flush list-group-horizontal list-group-horizontal-md list-group-horizontal-sm">
+                                    <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">1002</li>
+                                    <li class="list-group-item flex-fill col-md-4 col-sm-4">Test 1002</li>
+                                    <li class="list-group-item flex-fill col-md-1 col-sm-2 text-center">20</li>
+                                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">$40.00</li>
+                                    <li class="list-group-item flex-fill col-md-2 col-sm-2 text-end">$800.00</li>
+                                    <li class="list-group-item flex-fill col-md-2 col-sm-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="1002" onclick="editarDatos(1002)">
+                                                <span class="material-symbols-outlined">edit</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="1002" onclick="confirmaDescartarProducto(1002)">
+                                                <span class="material-symbols-outlined">cancel</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">1003</li>
+                                    <li class="list-group-item col-md-4">Test 1003</li>
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">12</li>
+                                    <li class="list-group-item col-md-2 text-end">34.00</li>
+                                    <li class="list-group-item col-md-2 text-end">408.00</li>
+                                    <li class="list-group-item col-md-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="1003" onclick="editarDatos(1003)">
+                                                <span class="material-symbols-outlined">edit</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="1003" onclick="confirmaDescartarProducto(1003)">
+                                                <span class="material-symbols-outlined">cancel</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">1005</li>
+                                    <li class="list-group-item col-md-4">Test 1005</li>
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">45</li>
+                                    <li class="list-group-item col-md-2 text-end">20.00</li>
+                                    <li class="list-group-item col-md-2 text-end">900.00</li>
+                                    <li class="list-group-item col-md-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="1005" onclick="editarDatos(1005)">
+                                                <span class="material-symbols-outlined">edit</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="1005" onclick="confirmaDescartarProducto(1005)">
+                                                <span class="material-symbols-outlined">cancel</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">1007</li>
+                                    <li class="list-group-item col-md-4">Test 1007</li>
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">12</li>
+                                    <li class="list-group-item col-md-2 text-end">25.00</li>
+                                    <li class="list-group-item col-md-2 text-end">300.00</li>
+                                    <li class="list-group-item col-md-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btnEditar" value="1007" onclick="editarDatos(1007)">
+                                                <span class="material-symbols-outlined">edit</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning bntBorrar" value="1007" onclick="confirmaDescartarProducto(1007)">
+                                                <span class="material-symbols-outlined">cancel</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-6 col-sm-6">
+                                    </li><li class="list-group-item col-2 text-end fst-italic fw-bolder">Total</li>
+                                    <li class="list-group-item col-2 text-end fst-italic fw-bolder">$2,408.00</li>
+                                    <li class="list-group-item col-2"></li>
+                                </ul>
+                                <h4 class="text-center">Tabla de productos descartados</h4>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">1001</li>
+                                    <li class="list-group-item col-4">Test 1001</li>
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">17</li>
+                                    <li class="list-group-item col-2 text-end">$20.00</li>
+                                    <li class="list-group-item col-2 text-end">$340.00</li>
+                                    <li class="list-group-item col-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="1001" onclick="restaurarDatos(1001)">
+                                                <span class="material-symbols-outlined">restore_from_trash</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="1001" onclick="confirmaBorrarDatos(1001)">
+                                                <span class="material-symbols-outlined">delete_forever</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">1004</li>
+                                    <li class="list-group-item col-4">Test 1004</li>
+                                    <li class="list-group-item col-md-1 col-sm-2 text-center">15</li>
+                                    <li class="list-group-item col-2 text-end">100.00</li>
+                                    <li class="list-group-item col-2 text-end">1,500.00</li>
+                                    <li class="list-group-item col-2">
+                                        <div class="input-group justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-success btnRestaurar" value="1004" onclick="restaurarDatos(1004)">
+                                                <span class="material-symbols-outlined">restore_from_trash</span>
+                                            </button>
+                                            <span class="vr"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger bntBorrar" value="1004" onclick="confirmaBorrarDatos(1004)">
+                                                <span class="material-symbols-outlined">delete_forever</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="list-group list-group-flush list-group-horizontal">
+                                    <li class="list-group-item col-md-6 col-sm-6">
+                                    </li><li class="list-group-item col-2 text-end fst-italic fw-bolder">Total</li>
+                                    <li class="list-group-item col-2 text-end fst-italic fw-bolder">$1,840.00</li>
+                                    <li class="list-group-item col-2"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </body>
+</html>
