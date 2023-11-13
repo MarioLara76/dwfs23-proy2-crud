@@ -12,5 +12,9 @@ U = Update, actualizar o modificar los datos.
 D = Delete, Remover o eliminar los datos.
 
 Mario Lara Pérez
+
 Desarrollador Web LAMP
-marioolara78@gmail.com | 52 932 128 9094
+
+marioolara78@gmail.com
+
+52 932 128 9094
